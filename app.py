@@ -2,14 +2,12 @@ import os
 import streamlit as st
 from huggingface_hub import InferenceClient
 
-
 st.set_page_config(
     page_title="MCQ Generator",
     page_icon="📝"
 )
 
 st.title("📝 AI MCQ Generator")
-
 
 topic = st.text_input(
     "Enter Topic",
@@ -22,19 +20,19 @@ num_questions = st.selectbox(
     index=0
 )
 
-
-HF_TOKEN = "hf_your_token_here"
-
 if st.button("Generate MCQs"):
+
+    st.write("Secrets keys:", list(st.secrets.keys()))
+    st.write("HF_TOKEN exists:", "HF_TOKEN" in st.secrets)
 
     if not topic:
         st.warning("Please enter a topic.")
-    else:
 
+    else:
         try:
 
             client = InferenceClient(
-               api_key = os.getenv("HF_TOKEN")
+                api_key=st.secrets["HF_TOKEN"]
             )
 
             prompt = f"""
