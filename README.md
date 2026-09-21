@@ -179,10 +179,5 @@ Answer: C) def
 
 **Hemalatha K**
 
-Student | Python Developer | AI & Data Science Enthusiast
+Student | Python Developer | AI Enthusiast
 
----
-
-## ⭐ Support
-
-If you like this project, give it a star on GitHub.
