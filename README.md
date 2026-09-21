@@ -163,18 +163,6 @@ Answer: C) def
 
 ---
 
-## 📸 Screenshots
-
-### Home Page
-
-![Home Page](home_page.png)
-
-### Generated MCQs
-
-![Generated MCQs](Generated_mcqs.png)
-
----
-
 ## 👩‍💻 Author
 
 **Hemalatha K**
