@@ -27,7 +27,7 @@ if st.button("Generate MCQs"):
 
         try:
 
-            client = InferenceClient(api_key="YOUR_TOKEN"
+            client = InferenceClient(api_key=os.getenv("HF_TOKEN"
 )
 prompt = f"""
 Generate exactly {num_questions} multiple-choice questions on {topic}.
