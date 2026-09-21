@@ -2,6 +2,7 @@ import os
 import streamlit as st
 from huggingface_hub import InferenceClient
 
+
 st.set_page_config(
     page_title="MCQ Generator",
     page_icon="📝"
@@ -9,9 +10,10 @@ st.set_page_config(
 
 st.title("📝 AI MCQ Generator")
 
-topic = st.text_area(
+
+topic = st.text_input(
     "Enter Topic",
-    placeholder="Example: Python, DBMS, Artificial Intelligence"
+    placeholder="Python, DBMS, AI, Machine Learning..."
 )
 
 num_questions = st.selectbox(
@@ -20,28 +22,32 @@ num_questions = st.selectbox(
     index=0
 )
 
+
+HF_TOKEN = "hf_your_token_here"
+
 if st.button("Generate MCQs"):
 
-    if not topic.strip():
+    if not topic:
         st.warning("Please enter a topic.")
     else:
 
         try:
 
-            client = InferenceClient(api_key=os.getenv("HF_TOKEN"
-)
-prompt = f"""
-Generate exactly {num_questions} multiple-choice questions on {topic}.
+            client = InferenceClient(
+               api_key = os.getenv("HF_TOKEN")
+            )
 
-Rules:
-- Number each question.
-- Give 4 options (A, B, C, D).
-- Mention the correct answer.
-- Avoid duplicate questions.
+            prompt = f"""
+Generate {num_questions} multiple-choice questions on {topic}.
+
+For each question:
+- Give 4 options (A, B, C, D)
+- Mention the correct answer
+- Keep questions simple
 
 Format:
 
-Question 1:
+Q1.
 A)
 B)
 C)
@@ -51,14 +57,14 @@ Answer:
 """
 
             response = client.chat.completions.create(
-                model="openai/gpt-oss-20b",
+                model="Qwen/Qwen3-4B-Thinking-2507",
                 messages=[
                     {
                         "role": "user",
                         "content": prompt
                     }
                 ],
-                max_tokens=2000
+                max_tokens=1500
             )
 
             result = response.choices[0].message.content
@@ -67,7 +73,4 @@ Answer:
             st.write(result)
 
         except Exception as e:
-            st.error("Error occurred")
-            st.exception(e)
-
-           
+            st.error(f"Error: {e}")
