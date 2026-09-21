@@ -27,12 +27,9 @@ if st.button("Generate MCQs"):
 
         try:
 
-            client = InferenceClient(
-                provider="auto",
-                api_key="YOUR_HUGGINGFACE_TOKEN"
-            )
-
-            prompt = f"""
+            client = InferenceClient(api_key="YOUR_TOKEN"
+)
+prompt = f"""
 Generate exactly {num_questions} multiple-choice questions on {topic}.
 
 Rules:
