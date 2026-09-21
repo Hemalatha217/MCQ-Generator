@@ -1,34 +1,35 @@
 import streamlit as st
 from huggingface_hub import InferenceClient
 
-# Page Config
+# ---------------- PAGE CONFIG ----------------
 st.set_page_config(
-    page_title="AI Interview Question Generator",
-    page_icon="🎤",
+    page_title="AI Study Notes Generator",
+    page_icon="📚",
     layout="wide"
 )
 
-# Header
-st.title("🎤 AI Interview Question Generator")
-st.write("Generate interview questions for any technology or job role.")
+# ---------------- HEADER ----------------
+st.title("📚 AI Study Notes Generator")
+st.write("Generate easy-to-understand study notes for any topic.")
 
-# Input
-col1, col2 = st.columns([2,1])
+# ---------------- INPUT ----------------
+col1, col2 = st.columns([2, 1])
 
 with col1:
     topic = st.text_area(
-        "Enter Technology / Job Role",
-        placeholder="Example: Python, Data Analyst, DBMS, Machine Learning..."
+        "Enter Topic",
+        placeholder="Example: Artificial Intelligence, DBMS, Python..."
     )
 
 with col2:
-    level = st.selectbox(
+    note_level = st.selectbox(
         "Difficulty Level",
         ["Beginner", "Intermediate", "Advanced"]
     )
 
-generate = st.button("Generate Questions")
+generate = st.button("✨ Generate Notes")
 
+# ---------------- GENERATION ----------------
 if generate:
 
     if not topic.strip():
@@ -36,38 +37,57 @@ if generate:
     else:
         try:
 
-            client = InferenceClient(
-                api_key=st.secrets["HF_Token"]
-            )
+            with st.spinner("Generating Notes..."):
 
-            prompt = f"""
-Generate 10 interview questions on {topic}.
+                client = InferenceClient(
+                    provider="auto",
+                    api_key=st.secrets["HF_Token"]
+                )
 
-Difficulty Level: {level}
+                prompt = f"""
+Create study notes on:
 
-Requirements:
-- Number each question.
-- Include only questions.
-- No answers.
-- Suitable for technical interviews.
+Topic: {topic}
+
+Level: {note_level}
+
+Include:
+
+1. Definition
+2. Key Concepts
+3. Advantages
+4. Disadvantages
+5. Applications
+6. Conclusion
+
+Use simple student-friendly language.
 """
 
-            response = client.chat.completions.create(
-                model="Qwen/Qwen2.5-7B-Instruct",
-                messages=[
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
-                max_tokens=1500
-            )
+                response = client.chat.completions.create(
+                    model="openai/gpt-oss-120b",
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": prompt
+                        }
+                    ],
+                    max_tokens=2000
+                )
 
-            result = response.choices[0].message.content
+                result = response.choices[0].message.content
 
-            st.subheader("Generated Interview Questions")
+            st.subheader("📖 Generated Notes")
             st.write(result)
 
         except Exception as e:
             st.error("Error occurred")
             st.exception(e)
+
+# ---------------- FOOTER ----------------
+st.markdown("---")
+st.caption("📚 AI Study Notes Generator")
+
+
+   
+
+           
