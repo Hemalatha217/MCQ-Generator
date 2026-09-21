@@ -9,7 +9,7 @@ st.set_page_config(
 
 st.title("📝 AI MCQ Generator")
 
-# Input
+# User Input
 topic = st.text_input(
     "Enter Topic",
     placeholder="Python, DBMS, AI, Machine Learning..."
@@ -21,9 +21,10 @@ num_questions = st.selectbox(
     index=0
 )
 
+# Generate Button
 if st.button("Generate MCQs"):
 
-    if not topic.strip():
+    if topic.strip() == "":
         st.warning("Please enter a topic.")
 
     else:
@@ -37,27 +38,27 @@ if st.button("Generate MCQs"):
             )
 
             prompt = f"""
-Generate {num_questions} multiple-choice questions on {topic}.
+Generate {num_questions} MCQs on {topic}.
 
 For each question:
-- Give exactly 4 options (A, B, C, D)
+- Give 4 options (A, B, C, D)
 - Mention the correct answer
-- Keep questions simple and educational
+- Keep questions simple
 
-Format:
+Example:
 
-Q1. Question
+Q1. What is Python?
 
-A)
-B)
-C)
-D)
+A) Database
+B) Programming Language
+C) Browser
+D) Operating System
 
-Answer:
+Answer: B) Programming Language
 """
 
             response = client.chat.completions.create(
-                model="Qwen/Qwen3-4B-Thinking-2507",
+                model="openai/gpt-oss-120b",
                 messages=[
                     {
                         "role": "user",
@@ -69,8 +70,8 @@ Answer:
 
             result = response.choices[0].message.content
 
-            st.subheader("📋 Generated MCQs")
+            st.subheader("Generated MCQs")
             st.write(result)
 
         except Exception as e:
-            st.error(f"Error: {e}")
+            st.error(str(e))
