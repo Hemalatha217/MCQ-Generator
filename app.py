@@ -1,7 +1,7 @@
-import os
 import streamlit as st
 from huggingface_hub import InferenceClient
 
+# Page Config
 st.set_page_config(
     page_title="MCQ Generator",
     page_icon="📝"
@@ -9,6 +9,7 @@ st.set_page_config(
 
 st.title("📝 AI MCQ Generator")
 
+# Input
 topic = st.text_input(
     "Enter Topic",
     placeholder="Python, DBMS, AI, Machine Learning..."
@@ -22,30 +23,31 @@ num_questions = st.selectbox(
 
 if st.button("Generate MCQs"):
 
-    st.write("Secrets keys:", list(st.secrets.keys()))
-    st.write("HF_TOKEN exists:", "HF_TOKEN" in st.secrets)
-
-    if not topic:
+    if not topic.strip():
         st.warning("Please enter a topic.")
 
     else:
         try:
 
+            # Read token from Streamlit Secrets
+            HF_TOKEN = st.secrets["HF_TOKEN"]
+
             client = InferenceClient(
-                api_key=st.secrets["HF_TOKEN"]
+                api_key=HF_TOKEN
             )
 
             prompt = f"""
 Generate {num_questions} multiple-choice questions on {topic}.
 
 For each question:
-- Give 4 options (A, B, C, D)
+- Give exactly 4 options (A, B, C, D)
 - Mention the correct answer
-- Keep questions simple
+- Keep questions simple and educational
 
 Format:
 
-Q1.
+Q1. Question
+
 A)
 B)
 C)
@@ -67,7 +69,7 @@ Answer:
 
             result = response.choices[0].message.content
 
-            st.subheader("Generated MCQs")
+            st.subheader("📋 Generated MCQs")
             st.write(result)
 
         except Exception as e:
